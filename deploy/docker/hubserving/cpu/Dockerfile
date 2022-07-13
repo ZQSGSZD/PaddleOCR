@@ -7,7 +7,8 @@ RUN pip3 install --upgrade pip -i https://mirror.baidu.com/pypi/simple
 
 RUN pip3 install paddlehub --upgrade -i https://mirror.baidu.com/pypi/simple
 
-RUN git clone https://github.com/ZQSGSZD/PaddleOCR.git /PaddleOCR
+# RUN git clone https://github.com/ZQSGSZD/PaddleOCR.git /PaddleOCR
+RUN git clone git://github.com/ZQSGSZD/PaddleOCR.git /PaddleOCR
 
 WORKDIR /PaddleOCR
 
