@@ -135,7 +135,7 @@ class StructureSystem(hub.Module):
             ori_img = img
             print(ori_img)
             cv2.imwrite(img_path, ori_img)
-            # cv2.imencode('.jpg', img).tofile(img_path)
+            cv2.imencode('.jpg', img).tofile(img_path)
             print("生成图片")
             starttime = time.time()
             cv_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -159,17 +159,19 @@ class StructureSystem(hub.Module):
             for region in res_final:
                 if region['type'] == 'Table':
                     html = region['res']['html']
-                    print("to_excel")
-                    to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
-                    file = open( output+"/"+img_name+".txt",'w')
+                    print("生成html文本txt")
+                    file = open(output + "/" + img_name + ".txt", 'w')
                     file.write(html)
+                    print("生成excel文件")
+                    to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
+
                 if region['type'] == 'Figure':
                     print("Figure")
                     x1, y1, x2, y2 = region['bbox']
                     print(region['bbox'])
-                    roi_img = img[y1:y2, x1:x2, :]
-                    img_path = os.path.join(output, '{}.jpg'.format(img_name))
-                    cv2.imwrite(img_path, roi_img)
+                    # roi_img = img[y1:y2, x1:x2, :]
+                    # img_path = os.path.join(output, '{}.jpg'.format(img_name))
+                    # cv2.imwrite(img_path, roi_img)
         print("all_results")
         print(all_results)
         return all_results
