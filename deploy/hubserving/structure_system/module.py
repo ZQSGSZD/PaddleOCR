@@ -24,7 +24,6 @@ import copy
 
 import subprocess
 import sys, os
-import commands
 import oss2
 import json
 import time
