@@ -22,12 +22,8 @@ import sys
 sys.path.insert(0, ".")
 import copy
 
-import subprocess
 import sys, os
-import oss2
-import json
 import time
-import paddlehub
 from paddlehub.common.logger import logger
 from paddlehub.module.module import moduleinfo, runnable, serving
 # from ppstructure.table.predict_table import  TableSystem
