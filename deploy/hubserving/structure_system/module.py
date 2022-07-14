@@ -160,7 +160,7 @@ class StructureSystem(hub.Module):
                 if region['type'] == 'Table':
                     html = region['res']['html']
                     print("to_excel")
-                    to_excel(html, output+'./{}.xlsx'.format(img_name))  # htmltable
+                    to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
                     file = open( output+"/"+img_name+".txt",'w')
                     file.write(html)
                 if region['type'] == 'Figure':
