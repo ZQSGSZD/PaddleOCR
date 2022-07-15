@@ -161,7 +161,6 @@ class StructureSystem(hub.Module):
                     html = region['res']['html']
                     print("生成html文本txt：")
                     print(html)
-                    html.encoding = 'utf-8'
                     file = open(output + "/" + img_name + ".txt", 'w')
                     file.write(html)
                     print("生成excel文件")
