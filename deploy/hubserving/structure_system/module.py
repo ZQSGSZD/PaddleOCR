@@ -70,6 +70,7 @@ class StructureSystem(hub.Module):
         # self.table_sys = TableSystem(cfg)
         self.table_sys = PPStructureSystem(cfg)
 
+    #图像纠偏
     def merge_configs(self):
         # deafult cfg
         backup_argv = copy.deepcopy(sys.argv)
@@ -84,6 +85,7 @@ class StructureSystem(hub.Module):
         sys.argv = copy.deepcopy(backup_argv)
         return cfg
 
+    # 图像纠偏
     def read_images(self, paths=[]):
         images = []
         for img_path in paths:
@@ -96,7 +98,7 @@ class StructureSystem(hub.Module):
             images.append(img)
         return images
 
-
+    #预测
     def predict(self, images=[], pagenumber=0,output_path=""):
         print("predict")
         print(pagenumber)
@@ -120,9 +122,7 @@ class StructureSystem(hub.Module):
         #     predicted_data = self.read_images(paths)
         # else:
         #     raise TypeError("The input data is inconsistent with expectations.")
-
         assert predicted_data != [], "There is not any image to be predicted. Please check the input data."
-        # output_path = '../output'
         all_results = []
         for img in predicted_data:
             if img is None:
@@ -159,7 +159,9 @@ class StructureSystem(hub.Module):
             for region in res_final:
                 if region['type'] == 'Table':
                     html = region['res']['html']
-                    print("生成html文本txt")
+                    print("生成html文本txt：")
+                    print(html)
+                    html.encoding = 'utf-8'
                     file = open(output + "/" + img_name + ".txt", 'w')
                     file.write(html)
                     print("生成excel文件")
@@ -167,7 +169,7 @@ class StructureSystem(hub.Module):
 
                 if region['type'] == 'Figure':
                     print("Figure")
-                    x1, y1, x2, y2 = region['bbox']
+                    # x1, y1, x2, y2 = region['bbox']
                     print(region['bbox'])
                     # roi_img = img[y1:y2, x1:x2, :]
                     # img_path = os.path.join(output, '{}.jpg'.format(img_name))
@@ -176,7 +178,7 @@ class StructureSystem(hub.Module):
         print(all_results)
         return all_results
 
-
+    # 图像纠偏
     def rotate_bound(image, angle):
         # 获取宽高
         (h, w) = image.shape[:2]
@@ -185,6 +187,7 @@ class StructureSystem(hub.Module):
         img = cv2.warpAffine(image, M, (w, h))
         return img
 
+    # 图像纠偏
     def rotate_points(points, angle, cX, cY):
         M = cv2.getRotationMatrix2D((cX, cY), angle, 1.0).astype(np.float16)
         a = M[:, :2]
@@ -195,6 +198,7 @@ class StructureSystem(hub.Module):
         points = points.astype(np.int_)
         return points
 
+    #图像纠偏
     def findangle(_image):
         # 用来寻找当前图片文本的旋转角度 在±90度之间
         # toWidth: 特征图大小：越小越快 但是效果会变差
