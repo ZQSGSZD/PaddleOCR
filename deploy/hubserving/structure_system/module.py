@@ -159,7 +159,6 @@ class StructureSystem(hub.Module):
             for region in res_final:
                 if region['type'] == 'Table':
                     html = region['res']['html']
-
                     print("生成excel文件")
                     to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
                     file = open(output + "/" + img_name + ".txt", 'w')
