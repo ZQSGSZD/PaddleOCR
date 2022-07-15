@@ -135,7 +135,7 @@ class StructureSystem(hub.Module):
             ori_img = img
             print(ori_img)
             cv2.imwrite(img_path, ori_img)
-            cv2.imencode('.jpg', img).tofile(img_path)
+            # cv2.imencode('.jpg', img).tofile(img_path)
             print("生成图片")
             starttime = time.time()
             cv_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
