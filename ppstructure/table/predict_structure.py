@@ -66,6 +66,7 @@ class TableStructurer(object):
         self.predictor, self.input_tensor, self.output_tensors, self.config = \
             utility.create_predictor(args, 'table', logger)
 
+
     def __call__(self, img):
         ori_im = img.copy()
         data = {'image': img}

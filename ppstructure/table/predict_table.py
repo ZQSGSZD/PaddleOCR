@@ -211,6 +211,8 @@ def main(args):
             continue
         starttime = time.time()
         pred_res = text_sys(img)
+        print("直接调用predict_table返回值为：")
+        print(pred_res)
         pred_html = pred_res['html']
         print(pred_html)
         logger.info(pred_html)

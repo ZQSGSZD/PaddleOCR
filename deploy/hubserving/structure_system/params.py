@@ -25,11 +25,18 @@ def read_params():
     cfg.layout_label_map = None
     cfg.mode = 'structure'
     cfg.table_max_len = 512
-    cfg.table_model_dir = './inference/en_ppocr_mobile_v2.0_table_structure_infer/'
+    cfg.table_model_dir = './inference/en_ppocr_mobile_v2.0_table_structure_infer'
     cfg.table_char_dict_path = './ppocr/utils/dict/table_structure_dict.txt'
     cfg.rec_char_dict_path = './ppocr/utils/ppocr_keys_v1.txt'
-    cfg.det_limit_side_len = 2500
+    cfg.det_limit_side_len = 2500.0
     cfg.det_db_unclip_ratio = 1.5
     cfg.output = './output/table'
     cfg.vis_font_path = './doc/fonts/simfang.ttf'
+
+    cfg.cls_batch_num = 6
+    cfg.det_db_box_thresh = 0.6
+    cfg.drop_score = 0.5
+    cfg.rec_algorithm = 'SVTR_LCNet'
+    cfg.show_log = True
+    cfg.use_gpu = True
     return cfg

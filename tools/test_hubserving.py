@@ -117,31 +117,38 @@ def main(args):
         data = {'images': [cv2_to_base64(img)], 'pagenumber': '5'}
         r = requests.post(
             url=args.server_url, headers=headers, data=json.dumps(data))
+        print("test_hubserving结果")
+        print(r)
         elapse = time.time() - starttime
         total_time += elapse
         logger.info("Predict time of %s: %.3fs" % (image_file, elapse))
-        print("r")
-        print(r.json())
-        res = r.json()["results"][0]
-        logger.info(res)
-        print("test_hubserving")
-        print(res)
         if args.visualize:
             draw_img = None
             if 'structure_table' in args.server_url:
-                to_excel(res['html']['html'], './{}.xlsx'.format(img_name))
-            elif 'structure_system' in args.server_url:
-                save_structure_res(res['regions'], args.output, image_file)
-            else:
-                draw_img = draw_server_result(image_file, res)
-            if draw_img is not None:
-                if not os.path.exists(args.output):
-                    os.makedirs(args.output)
-                cv2.imwrite(
-                    os.path.join(args.output, os.path.basename(image_file)),
-                    draw_img[:, :, ::-1])
-                logger.info("The visualized image saved in {}".format(
-                    os.path.join(args.output, os.path.basename(image_file))))
+                to_excel(r['html'], './{}.xlsx'.format(img_name))
+
+        # print("r")
+        # print(r.json())
+        # res = r.json()["results"][0]
+        # logger.info(res)
+        # print("test_hubserving")
+        # print(res)
+        # if args.visualize:
+        #     draw_img = None
+        #     if 'structure_table' in args.server_url:
+        #         to_excel(res['html']['html'], './{}.xlsx'.format(img_name))
+        #     elif 'structure_system' in args.server_url:
+        #         save_structure_res(res['regions'], args.output, image_file)
+        #     else:
+        #         draw_img = draw_server_result(image_file, res)
+        #     if draw_img is not None:
+        #         if not os.path.exists(args.output):
+        #             os.makedirs(args.output)
+        #         cv2.imwrite(
+        #             os.path.join(args.output, os.path.basename(image_file)),
+        #             draw_img[:, :, ::-1])
+        #         logger.info("The visualized image saved in {}".format(
+        #             os.path.join(args.output, os.path.basename(image_file))))
         cnt += 1
         if cnt % 100 == 0:
             logger.info("{} processed".format(cnt))
@@ -164,4 +171,5 @@ def parse_args():
 if __name__ == '__main__':
     print("test_hubserving_main")
     args = parse_args()
+    print(args)
     main(args)

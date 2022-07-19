@@ -26,7 +26,7 @@ import sys, os
 import time
 from paddlehub.common.logger import logger
 from paddlehub.module.module import moduleinfo, runnable, serving
-# from ppstructure.table.predict_table import  TableSystem
+from ppstructure.table.predict_table import  TableSystem
 import cv2
 import numpy as np
 import paddlehub as hub
@@ -67,10 +67,12 @@ class StructureSystem(hub.Module):
                 )
         cfg.ir_optim = True
         cfg.enable_mkldnn = enable_mkldnn
-        # self.table_sys = TableSystem(cfg)
-        self.table_sys = PPStructureSystem(cfg)
+        print("TableSystem(cfg)")
+        print(cfg)
+        self.table_sys = TableSystem(cfg)
+        # self.table_sys = PPStructureSystem(cfg)
 
-    #图像纠偏
+
     def merge_configs(self):
         # deafult cfg
         backup_argv = copy.deepcopy(sys.argv)
@@ -124,6 +126,7 @@ class StructureSystem(hub.Module):
         #     raise TypeError("The input data is inconsistent with expectations.")
         assert predicted_data != [], "There is not any image to be predicted. Please check the input data."
         all_results = []
+        result = []
         for img in predicted_data:
             if img is None:
                 logger.info("error in loading image")
@@ -139,40 +142,48 @@ class StructureSystem(hub.Module):
             print("生成图片")
             starttime = time.time()
             cv_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-            cv2.imwrite('./output/correct.png', img)
+            # cv2.imwrite('./output/correct.png', img)
             angle = StructureSystem.findangle(cv_img)
             img = StructureSystem.rotate_bound(cv_img, -angle)
-            cv2.putText(img, 'Angle:{:.2f} degrees'.format(angle), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255),
-                        2)
+            # cv2.putText(img, 'Angle:{:.2f} degrees'.format(angle), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255),
+            #             2)
             # 绘制文字
             # cv2.imwrite('./hubserving_result/test.png', img)
             print("纠偏完成")
-            res = self.table_sys(img)
-            elapse = time.time() - starttime
-            logger.info("Predict time: {}".format(elapse))
-            # parse result
-            res_final = []
-            for region in res:
-                region.pop('img')
-                res_final.append(region)
-            all_results.append({'regions': res_final})
-            for region in res_final:
-                if region['type'] == 'Table':
-                    html = region['res']['html']
-                    print("生成excel文件")
-                    to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
-                    file = open(output + "/" + img_name + ".txt", 'w')
-                    file.write(html)
-                if region['type'] == 'Figure':
-                    print("Figure")
-                    # x1, y1, x2, y2 = region['bbox']
-                    print(region['bbox'])
-                    # roi_img = img[y1:y2, x1:x2, :]
-                    # img_path = os.path.join(output, '{}.jpg'.format(img_name))
-                    # cv2.imwrite(img_path, roi_img)
-        print("all_results")
-        print(all_results)
-        return all_results
+
+            result = self.table_sys(img)
+            print("切换predict_table结果为")
+            print(result)
+            pred_html = result['html']
+            if result['html'] != None:
+                to_excel(pred_html, output + '/{}.xlsx'.format(img_name))  # htmltable
+                file = open(output + "/" + img_name + ".txt", 'w')
+                file.write(pred_html)
+            # elapse = time.time() - starttime
+            # logger.info("Predict time: {}".format(elapse))
+            # # parse result
+            # res_final = []
+            # for region in res:
+            #     region.pop('img')
+            #     res_final.append(region)
+            # all_results.append({'regions': res_final})
+            # for region in res_final:
+            #     if region['type'] == 'Table':
+            #         html = region['res']['html']
+            #         print("生成excel文件")
+            #         to_excel(html, output+'/{}.xlsx'.format(img_name))  # htmltable
+            #         file = open(output + "/" + img_name + ".txt", 'w')
+            #         file.write(html)
+            #     if region['type'] == 'Figure':
+            #         print("Figure")
+            #         # x1, y1, x2, y2 = region['bbox']
+            #         print(region['bbox'])
+            #         # roi_img = img[y1:y2, x1:x2, :]
+            #         # img_path = os.path.join(output, '{}.jpg'.format(img_name))
+            #         # cv2.imwrite(img_path, roi_img)
+        print("result")
+        print(result)
+        return result
 
     # 图像纠偏
     def rotate_bound(image, angle):
