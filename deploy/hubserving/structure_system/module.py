@@ -24,9 +24,9 @@ import copy
 
 import sys, os
 import time
-from paddlehub.common.logger import logger
+# from paddlehub.logger import logger
 from paddlehub.module.module import moduleinfo, runnable, serving
-from ppstructure.table.predict_table import  TableSystem
+from ppstructure.table.predict_table import TableSystem
 import cv2
 import numpy as np
 import paddlehub as hub
@@ -72,7 +72,6 @@ class StructureSystem(hub.Module):
         self.table_sys = TableSystem(cfg)
         # self.table_sys = PPStructureSystem(cfg)
 
-
     def merge_configs(self):
         # deafult cfg
         backup_argv = copy.deepcopy(sys.argv)
@@ -95,13 +94,13 @@ class StructureSystem(hub.Module):
                 img_path), "The {} isn't a valid file.".format(img_path)
             img = cv2.imread(img_path)
             if img is None:
-                logger.info("error in loading image:{}".format(img_path))
+                # logger.info("error in loading image:{}".format(img_path))
                 continue
             images.append(img)
         return images
 
-    #预测
-    def predict(self, images=[], pagenumber=0,output_path=""):
+    # 预测
+    def predict(self, images=[], pagenumber=0, output_path=""):
         print("predict")
         print(pagenumber)
         print(output_path)
@@ -129,7 +128,7 @@ class StructureSystem(hub.Module):
         result = []
         for img in predicted_data:
             if img is None:
-                logger.info("error in loading image")
+                # logger.info("error in loading image")
                 all_results.append([])
                 continue
             img_name = 'img_' + str(pagenumber)
@@ -155,10 +154,13 @@ class StructureSystem(hub.Module):
             print("切换predict_table结果为")
             print(result)
             pred_html = result['html']
-            if result['html'] != None:
-                to_excel(pred_html, output + '/{}.xlsx'.format(img_name))  # htmltable
+            if result['html'] is not None:
+                print("生成html_table")
                 file = open(output + "/" + img_name + ".txt", 'w')
                 file.write(pred_html)
+                print("生成识别excel")
+                to_excel(pred_html, output + './{}.xlsx'.format(img_name))  # htmltable
+
             # elapse = time.time() - starttime
             # logger.info("Predict time: {}".format(elapse))
             # # parse result
@@ -205,7 +207,7 @@ class StructureSystem(hub.Module):
         points = points.astype(np.int_)
         return points
 
-    #图像纠偏
+    # 图像纠偏
     def findangle(_image):
         # 用来寻找当前图片文本的旋转角度 在±90度之间
         # toWidth: 特征图大小：越小越快 但是效果会变差
@@ -289,7 +291,7 @@ class StructureSystem(hub.Module):
         return minRotate
 
     @serving
-    def serving_method(self, images,**kwargs):
+    def serving_method(self, images, **kwargs):
         """
         Run as a service.
         """
