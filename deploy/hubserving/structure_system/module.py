@@ -159,7 +159,7 @@ class StructureSystem(hub.Module):
                 file = open(output + "/" + img_name + ".txt", 'w')
                 file.write(pred_html)
                 print("生成识别excel")
-                to_excel(pred_html, output + './{}.xlsx'.format(img_name))  # htmltable
+                to_excel(pred_html, output + '/{}.xlsx'.format(img_name))  # htmltable
 
             # elapse = time.time() - starttime
             # logger.info("Predict time: {}".format(elapse))
@@ -186,6 +186,10 @@ class StructureSystem(hub.Module):
         print("result")
         print(result)
         return result
+
+
+
+
 
     # 图像纠偏
     def rotate_bound(image, angle):
